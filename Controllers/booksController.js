@@ -21,7 +21,7 @@ const AddNewBook = async (req, res) => {
 
 const DeleteAllBooks = async (req, res) => {
     try {
-        await bookModel.deleteMany({});
+        await bookModel.deleteMany();
         res.sendStatus(202);
     } catch (err) {
         res.status(400).send(err);
@@ -31,8 +31,9 @@ const DeleteAllBooks = async (req, res) => {
 
 const ViewBook = async (req, res) => {
     try {
-        await bookModel.create(req.params.id);
-        res.sendStatus(201);
+        var book = await bookModel.findById(req.params.id);
+        // res.sendStatus(201);
+        res.json(book);
     } catch (err) {
         res.status(400).send(err);
     }
