@@ -6,7 +6,7 @@ const booksRoute = (app) => {
         .post(bookControllers.AddNewBook)
         .delete(bookControllers.DeleteAllBooks)
 
-    app.route('/book/:bookId')
+    app.route('/books/:id')
         .get(bookControllers.ViewBook)
         .put(bookControllers.UpdateBook)
         .delete(bookControllers.DeleteBook)

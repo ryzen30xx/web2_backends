@@ -1,0 +1,31 @@
+version: '1.0'
+
+services:
+  web2_api:
+    image: ryzen30xx/web2_api:latest
+    container_name: web2_api
+    restart: always
+    ports:
+      - "3005:3005"
+    networks:
+      - host
+    environment:
+      - NODE_ENV=production
+      - PORT=3005
+  web2_frontend:
+    image: ryzen30xx/web2_frontend:latest
+    container_name: web2_frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    networks:
+      - host
+  mongodb:
+    image: mongodb/mongodb-community-server:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    networks:
+      - host
+    
