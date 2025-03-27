@@ -1,22 +1,31 @@
-const express = require('express');
-const  mongoose = require('mongoose');
-const bodyParser = require('body-parser');
-const cors = require('cors');
+require("dotenv").config();
+const express = require("express");
+const connectDB = require("./config/db");
+const cors = require("cors");
+const verifyToken = require("./middleware/authMiddleware");
+
 const app = express();
-
 app.use(cors());
-const db_uri = 'mongodb://localhost:27017/bookstore';
-mongoose.connect(db_uri). then(() => console.log('MongoDB Connected!')) .catch(error => console.log("Database Have Some Error: "+ error));
-// API Port
+app.use(express.json());
+
+// Connect to MongoDB
+connectDB();
+
+// Import Routes
+const authRoutes = require("./Routes/authRoutes");
+const booksRoutes = require("./Routes/booksRoute");
+
+// Public Routes (Login & Register)
+app.use("/auth", authRoutes);
+
+// Protected Routes (Require Authentication)
+app.use("/books", verifyToken, booksRoutes); 
+
+// Redirect Unauthenticated Users to Landing Page
+app.get("/", (req, res) => {
+    res.send({ message: "Welcome to the Bookstore API. Please log in." });
+});
+
+// Start Server
 const port = process.env.PORT || 3005;
-app.use(express.static('public'));
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-const booksRoute = require('./Routes/booksRoute.js')
-booksRoute(app)
-
-app.listen(port, function() {
-    console.log(`Server started on port ${port}`);
-})
-
+app.listen(port, () => console.log(` Server running on http://localhost:${port}`));

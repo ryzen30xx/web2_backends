@@ -1,15 +1,10 @@
-const bookControllers = require('../Controllers/booksController.js');
+const express = require("express");
+const { getAllBooks, getBookDetails } = require("../Controllers/booksController");
+const verifyToken = require("../middleware/authMiddleware");
 
-const booksRoute = (app) => {
-    app.route('/books')
-        .get(bookControllers.ViewAllBooks)
-        .post(bookControllers.AddNewBook)
-        .delete(bookControllers.DeleteAllBooks)
+const router = express.Router();
 
-    app.route('/books/:id')
-        .get(bookControllers.ViewBook)
-        .put(bookControllers.UpdateBook)
-        .delete(bookControllers.DeleteBook)
-}
+router.get("/", getAllBooks); // Public
+router.get("/:id", verifyToken, getBookDetails); // Protected
 
-module.exports = booksRoute
+module.exports = router;
