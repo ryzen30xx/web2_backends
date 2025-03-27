@@ -3,7 +3,28 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
-// Register a new user
+// Lấy danh sách tất cả người dùng
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find({}, "-password"); // Loại bỏ password khi trả về
+        res.json(users);
+    } catch (error) {
+        res.status(500).json({ message: "Error fetching users", error });
+    }
+};
+
+// Xóa người dùng theo ID
+exports.deleteUser = async (req, res) => {
+    try {
+        const { id } = req.params;
+        await User.findByIdAndDelete(id);
+        res.json({ message: "User deleted successfully" });
+    } catch (error) {
+        res.status(500).json({ message: "Error deleting user", error });
+    }
+};
+
+// Đăng ký người dùng
 exports.registerUser = async (req, res) => {
     try {
         const { username, password } = req.body;
@@ -18,7 +39,7 @@ exports.registerUser = async (req, res) => {
     }
 };
 
-// User login & Generate JWT
+// Đăng nhập và tạo JWT
 exports.loginUser = async (req, res) => {
     try {
         const { username, password } = req.body;
