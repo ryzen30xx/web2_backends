@@ -5,7 +5,15 @@ const cors = require("cors");
 const verifyToken = require("./middleware/authMiddleware");
 
 const app = express();
-app.use(cors());
+
+// ✅ Correct CORS configuration
+const corsOptions = {
+    origin: '*',  // Accept requests from any origin
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.use(cors(corsOptions)); // ✅ Only set CORS once
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -29,4 +37,4 @@ app.get("/", (req, res) => {
 
 // Start Server
 const port = process.env.PORT || 3005;
-app.listen(port, () => console.log(` Server running on http://localhost:${port}`));
+app.listen(port, '0.0.0.0', () => console.log(`Server running on http://localhost:${port}`));
